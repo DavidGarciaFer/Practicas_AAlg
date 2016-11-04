@@ -1,0 +1,13 @@
+MERGESORT
+
+La plot general de todas las gráficas la hice con los siguientes ajustes:
+
+./ejercicio5 -num_min 1 -num_max 1000 -incr 5 -numP 50 -fichSalida datos.txt
+
+Luego hice un plot igual, pero con -num_max 100
+
+QUICKSORT
+
+PIVOTE 1
+
+En todos los pivotes he usado la de tamaño 1000
