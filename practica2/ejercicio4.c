@@ -27,7 +27,7 @@ int main(int argc, char** argv)
     fprintf(stderr, "%s -tamanio <int> -metodo <char*> -tipo <int> \n", argv[0]);
     fprintf(stderr, "Donde:\n");
     fprintf(stderr, " -tamanio : numero elementos permutacion.\n");
-	fprintf(stderr, " -metodo : nombre del algoritmo (quicksort o mergesort)");
+	fprintf(stderr, " -metodo : nombre del algoritmo (quicksort o mergesort)\n");
     fprintf(stderr, " -tipo : entero que identifica la eleccion del pivote, en el caso de quicksort. \nSiendo 1 FIRST, 2 AVERAGE, 3 STAT.\n En mergesort introducir un entero cualquiera.\n");
     return 0;
   }

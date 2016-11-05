@@ -271,7 +271,7 @@ int partir(int* tabla, int ip, int iu, int* pos, int type){
 	
 	if(!tabla || ip < 0 || ip > iu || !pos) return ERR;
 	
-	if(medio(tabla, ip, iu, pos, type) == ERR) /*ACORDARSE DE MODIFICARLO ANTES DE PROBARLO*/	
+	if(medio(tabla, ip, iu, pos, type) == ERR) 	
 		return ERR;
 	
 	k = tabla[*pos];
@@ -286,7 +286,7 @@ int partir(int* tabla, int ip, int iu, int* pos, int type){
 		if(tabla[i] < k){
 			(*pos)++;
 			buff = tabla[i];
-			tabla[i] = tabla[*pos]; /*OJITOOOO*/
+			tabla[i] = tabla[*pos]; 
 			tabla[*pos] = buff;
 		}
 		counter++;
