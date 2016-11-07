@@ -22,7 +22,7 @@
 /*                                                 */
 /* Rutina que almacena en un estructura de tipo    */
 /* tiempo el tamaño de las permutaciones, el       */
-/* número de permutaciones, el tiempo medio de     */ 
+/* número de permutaciones, el tiempo medio de     */
 /* ejecución, número medio, mínimo y máximo de OB  */
 /* ejecutadas.                                     */
 /*                                                 */
@@ -37,9 +37,9 @@
 /*  OK si todo fue bien.                           */
 /*  ERR en caso de error                           */
 /***************************************************/
-short tiempo_medio_ordenacion(pfunc_ordena metodo, 
+short tiempo_medio_ordenacion(pfunc_ordena metodo,
                               int n_perms,
-                              int tamanio, 
+                              int tamanio,
                               PTIEMPO ptiempo)
 {
 	int i, min = INT_MAX, max = 0, suma_ob = 0;
@@ -47,18 +47,18 @@ short tiempo_medio_ordenacion(pfunc_ordena metodo,
 	double suma_t = 0;
 	double *t_medio;
 	clock_t t_ini, t_fin;
-	
+
 	if(!metodo || n_perms <=0 || tamanio <=0 || !ptiempo) return ERR;
-	
+
 	ob = (int*)malloc(sizeof(int)*n_perms);
 	if(!ob) return ERR;
-	
+
 	t_medio = (double*)malloc(sizeof(double)*n_perms);
 	if(!t_medio){
 		free(ob);
 		return ERR;
 	}
-	
+
 	permutaciones = genera_permutaciones(n_perms, tamanio);
 	if(!permutaciones){
 		free(ob);
@@ -71,7 +71,7 @@ short tiempo_medio_ordenacion(pfunc_ordena metodo,
 		ob[i] = metodo(permutaciones[i], 0, tamanio - 1);
 		t_fin = clock();
 		t_medio[i] = (double)(t_fin - t_ini)/CLOCKS_PER_SEC;
-		
+
 		if(ob[i] < 0){
 			free(ob);
 			free(t_medio);
@@ -81,40 +81,40 @@ short tiempo_medio_ordenacion(pfunc_ordena metodo,
 			free(permutaciones);
 			return ERR;
 		}
-		
+
 		if(ob[i] < min){
 			min = ob[i];
-		}	
-			
+		}
+
 		if(ob[i] > max){
 			max = ob[i];
 		}
 	}
-	
+
 	ptiempo->tamanio = tamanio;
 	ptiempo->n_perms = n_perms;
 	ptiempo->min_ob = min;
 	ptiempo->max_ob = max;
-	
+
 	for(i = 0; i < n_perms; i++){
-		suma_ob += ob[i];	
+		suma_ob += ob[i];
 		suma_t += t_medio[i];
 	}
-	
+
 	ptiempo->tiempo = suma_t/n_perms;
 	ptiempo->medio_ob = (double)(suma_ob/n_perms);
-	
+
 	free(ob);
 	free(t_medio);
-	
+
 	for(i = 0; i < n_perms ; i++){
 		free(permutaciones[i]);
 	}
-	
+
 	free(permutaciones);
-	
+
 	return OK;
-	 
+
 }
 
 /***************************************************/
@@ -140,33 +140,33 @@ short tiempo_medio_ordenacion(pfunc_ordena metodo,
 /*  OK si todo fue bien                            */
 /*  ERR en caso de error                           */
 /***************************************************/
-short genera_tiempos_ordenacion(pfunc_ordena metodo, char* fichero, 
-                                int num_min, int num_max, 
+short genera_tiempos_ordenacion(pfunc_ordena metodo, char* fichero,
+                                int num_min, int num_max,
                                 int incr, int n_perms)
 {
 	TIEMPO** tiempo; /*Esto es un array de punteros a tiempo*/
 	int i, j, N;
-	
+
 	if(!metodo || !fichero || num_min <= 0 || num_max <= 0 || num_max <= num_min || incr <= 0 || n_perms <= 0) return ERR;
-	
+
 	N = ((num_max - num_min) / incr) + 1;
-	
+
 	tiempo = (TIEMPO**)malloc(sizeof(TIEMPO*)*N); /*Reservo memoria para el array de punteros a tiempo*/
-	
+
 	for(i = num_min, j = 0 ; i <= num_max; i = i + incr, j++){
-	
+
 		/*Reservo memoria para cada puntero a tiempo en cada iteración*/
 
-		tiempo[j] = (TIEMPO*)malloc(sizeof(TIEMPO)); 
+		tiempo[j] = (TIEMPO*)malloc(sizeof(TIEMPO));
 		if(!tiempo[j]){
-			
+
 			for(j = j - 1; j >= 0 ; j--){
 				free(tiempo[j]);
 			}
 			free(tiempo);
 			return ERR;
 		}
-		
+
 		if(tiempo_medio_ordenacion(metodo, n_perms, i, tiempo[j]) == ERR){
 			for(i = 0; i < N ; i++){
 				free(tiempo[i]);
@@ -174,10 +174,10 @@ short genera_tiempos_ordenacion(pfunc_ordena metodo, char* fichero,
 			free(tiempo);
 			return ERR;
 
-		} 
+		}
 	}
-		
-	
+
+
 	if(guarda_tabla_tiempos(fichero, tiempo, N) == ERR){
 		for(i = 0; i < N ; i++){
 				free(tiempo[i]);
@@ -190,9 +190,9 @@ short genera_tiempos_ordenacion(pfunc_ordena metodo, char* fichero,
 		free(tiempo[i]);
 	}
 	free(tiempo);
-	
+
 	return OK;
-	
+
 }
 
 /***************************************************/
@@ -214,7 +214,7 @@ short genera_tiempos_ordenacion(pfunc_ordena metodo, char* fichero,
 /*  ERR en caso de error                           */
 /***************************************************/
 short guarda_tabla_tiempos(char* fichero, PTIEMPO* tiempo, int N){
-	
+
 	int i;
 	FILE *f;
 
@@ -223,15 +223,14 @@ short guarda_tabla_tiempos(char* fichero, PTIEMPO* tiempo, int N){
 	f = fopen(fichero, "w");
 	if(!f) return ERR;
 
-	/*fprintf(f,"Tamaño\tTiempo promedio\tPromedio OB\tMin OB\tMax OB\n\n");*/
+	fprintf(f,"Tamaño\tTiempo promedio\tPromedio OB\tMin OB\tMax OB\n\n");
 
 	for(i = 0; i < N; i++){
-		fprintf(f, "Tamaño: %d\tTiempo promedio: %.7f\tPromedio OB: %.3f\tMin OB: %d\tMax OB: %d\n", tiempo[i]->tamanio, tiempo[i]->tiempo, tiempo[i]->medio_ob, tiempo[i]->min_ob, tiempo[i]->max_ob);
-	}
+		fprintf(f, "%d\t%.7f\t%.3f\t%d\t%d\n", tiempo[i]->tamanio, tiempo[i]->tiempo, tiempo[i]->medio_ob, tiempo[i]->min_ob, tiempo[i]->max_ob);
+
+  }
 
 	fclose(f);
 
 	return OK;
 }
-
-
