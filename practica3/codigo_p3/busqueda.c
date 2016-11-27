@@ -1,4 +1,4 @@
-/**
+/*
  *
  * Descripcion: Implementacion funciones para busqueda
  *
@@ -10,7 +10,6 @@
  */
 
 #include "busqueda.h"
-
 #include <stdlib.h>
 #include <math.h>
 #include <stdio.h>
@@ -62,9 +61,9 @@ PDICC ini_diccionario (int tamanio, char orden){
 
   DICC* diccionario;
 
-  if(tamanio <= 0 || orden != ORDENADO || orden != NO_ORDENADO)
+  if(tamanio <= 0 || (orden != ORDENADO && orden != NO_ORDENADO)){
     return NULL;
-
+  }
   diccionario = (DICC*)malloc(sizeof(DICC));
   if(!diccionario) return NULL;
 
@@ -83,41 +82,64 @@ PDICC ini_diccionario (int tamanio, char orden){
 }
 
 void libera_diccionario(PDICC pdicc){
-  int i = 0;
   if(!pdicc) return;
   if(pdicc->tabla)
     free(pdicc->tabla);
   free(pdicc);
 }
 
-int inserta_diccionario(PDICC pdicc, int clave){
+/*int inserta_diccionario(PDICC pdicc, int clave){
   int j, counter;
-  if(!pdicc || clave > 0 || pdicc->n_datos < pdicc->tamanio)
+  if(!pdicc || clave < 0 || pdicc->n_datos >= pdicc->tamanio)
     return ERR;
-  pdicc->tabla[pdicc->n_datos];
+  pdicc->tabla[pdicc->n_datos] = clave;
   pdicc->n_datos++;
   if (pdicc->orden == ORDENADO){
-    for(j = pdicc->n_datos - 2 , counter = 0; j >= 0 && pdicc->tabla[j] > pdicc->tabla[pdicc->n_datos-1]; j--, counter++){
-      pdicc->tabla[j+1] = tabla[j];
+    for(j = pdicc->n_datos - 2 , counter = 0; j >= 0 && pdicc->tabla[j] > pdicc->tabla[pdicc->n_datos-1]; j--, counter++)
+      pdicc->tabla[j+1] = pdicc->tabla[j];
   }
   if(j >= 0)
     counter++;
   pdicc->tabla[j+1] = pdicc->tabla[pdicc->n_datos-1];
   return counter;
+}*/
+int inserta_diccionario(PDICC pdicc, int clave){
+  int i, buff, counter = 0;
+  if(!pdicc || clave <= 0)
+    return ERR;
+  if(pdicc->n_datos == pdicc->tamanio)
+    return ERR;
+  pdicc->tabla[pdicc->n_datos] = clave;
+  pdicc->n_datos++;
+  if(pdicc->orden == ORDENADO){
+    buff = pdicc->tabla[pdicc->n_datos-2];
+    i = pdicc->n_datos - 3;
+    while(i >= 0 && pdicc->tabla[i] > buff){
+      pdicc->tabla[i + 1] = pdicc->tabla[i];
+      i--;
+      counter++;
+    }
+    pdicc->tabla[i+1] = buff;
+  }
+  return counter++;
 }
 
-int insercion_masiva_diccionario (PDICC pdicc,int *claves, int n_claves){
+int insercion_masiva_diccionario (PDICC pdicc, int *claves, int n_claves){
 	int j, counter, cerror;
-  if(!pdicc || !claves || n_claves <= 0 || pdicc->n_datos + n_claves <= pdicc->tamanio)
+  if(!pdicc || !claves || n_claves <= 0 || ((pdicc->n_datos + n_claves) > pdicc->tamanio)){
     return ERR;
+  }
   for(j = 0, counter = 0, cerror = 0; j < n_claves ; j++){
-    cerror += inserta_diccionario(pdicc, claves[i]);
-    if(cerror == ERR)
-      return counter;
+    cerror += inserta_diccionario(pdicc, claves[j]);
+    if(cerror == ERR){
+      return ERR;
+    }
     counter += cerror;
   }
   return counter;
 }
+
+
 
 int busca_diccionario(PDICC pdicc, int clave, int *ppos, pfunc_busqueda metodo){
   int counter;
@@ -131,7 +153,7 @@ void imprime_diccionario(PDICC pdicc){
 int i;
   if(!pdicc) return;
   printf("%d:%d:%c[ ", pdicc->tamanio, pdicc->n_datos, pdicc->orden);
-  for (i = 0; i < n_datos; i++) {
+  for (i = 0; i < pdicc->n_datos; i++) {
     printf("%d ", pdicc->tabla[i]);
   }
   printf(" ]\n");
@@ -139,57 +161,62 @@ int i;
 
 /* Funciones de busqueda del TAD Diccionario */
 int bbin(int *tabla,int P,int U,int clave,int *ppos){
-  int medio, counter = 0;
-  if(!tabla || P < 0 || U < P || clave <= 0)
-    return ERR;
-  /*Caso base*/
-  if(P == U){
-    if(clave == tabla[P])
-      *ppos = P;
+
+  int counter = 0, error;
+  int medio = (P+U)/2;
+
+  while(P <= U){
+    if(tabla[medio] == clave){
+      *ppos = medio + 1;
       return 1;
-  }
-  else
-    return ERR;
-  /*Llamadas recursivas*/
-  medio = (P+U)/2;
-  if(tabla[medio] == clave)
-    *ppos = medio;
-    return 1;
-  if(tabla[medio] < clave){
-    counter = bbin(tabla, medio + 1, U, clave, ppos) + 2;
-    if (counter == ERR){
-      return ERR;
     }
+    if(tabla[medio] < clave){
+      P = medio + 1;
+      /*U se queda igual*/
+      counter++;
+    }
+    else{
+      /*P se queda igual*/
+      U = medio;
+      counter++;
+    }
+    error = bbin(tabla, P, U, clave, ppos);
+    if(error == NO_ENCONTRADO){
+      return NO_ENCONTRADO;
+    }
+    counter += error;
     return counter;
   }
-  counter = bbin(tabla, P, medio - 1, clave, ppos) + 3;
-  if (counter == ERR){
-    return ERR;
-  }
-  return counter;
+  return NO_ENCONTRADO;
 }
 
 int blin(int *tabla,int P,int U,int clave,int *ppos){
-  int i, counter;
-  if(!tabla || P < 0 || U < P || clave <= 0)
+  int i, counter = 0;
+  if(!tabla || P < 0 || U < P || clave <= 0){
     return ERR;
-  for(i = P, counter = 0; i < U && tabla[i] != clave; i ++, counter++);
-  if(tabla[i] != clave)
-    return ERR;
-  *ppos = i;
-  return counter++;
+  }
+  for(i = P, counter = 0; i <= U && tabla[i] != clave; i ++, counter++);
+  if(i > U){
+    return NO_ENCONTRADO;
+  }
+  *ppos = i + 1;
+  counter++;
+  return counter;
 }
 
 int blin_auto(int *tabla,int P,int U,int clave,int *ppos){
   int i, counter, buff;
   if(!tabla || P < 0 || U < P || clave <= 0)
     return ERR;
-  for(i = P, counter = 0; i < U && tabla[i] != clave; i ++, counter++);
-  if(tabla[i] != clave)
-    return ERR;
+  for(i = P, counter = 0; i <= U && tabla[i] != clave; i ++, counter++);
+  if(i > U)
+    return NO_ENCONTRADO;
   buff = tabla[i];
   tabla[i] = tabla[i-1];
   tabla[i-1] = buff;
-  *ppos = i-1;
-  return counter++;
+  /*OJO AQUÍ: LE DAMOS EL VALOR DEL INDICE + 1 (EL INDICE 0 SERIA LA POSICION 1)*/
+  /*¿HAY QUE DAR EN QUÉ POSICION ESTABA O EN QUE POSICION SE ENCUENTRA EN ESTE MOMENTO?*/
+  *ppos = i+1;
+  counter++;
+  return counter;
 }

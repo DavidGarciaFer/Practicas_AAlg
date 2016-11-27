@@ -17,14 +17,15 @@
 #include<string.h>
 #include<time.h>
 
-/*#include "ordenar.h"*/
+#include "ordenacion.h"
 #include "busqueda.h"
+#include "permutaciones.h"
 
 int main(int argc, char** argv)
 {
   int i, nob, pos;
   unsigned int clave, tamanio;
-  PDICC pdicc;
+  PDICC pdicc, pdicc2;
   int *perm;
 
   srand(time(NULL));
@@ -53,6 +54,8 @@ int main(int argc, char** argv)
     }
   }
 
+  /*Creamos un diccionario*/
+
   pdicc = ini_diccionario(tamanio,NO_ORDENADO);
 
   if (pdicc == NULL) {
@@ -60,6 +63,8 @@ int main(int argc, char** argv)
     printf("Error: No se puede Iniciar el diccionario\n");
     exit(-1);
   }
+
+  /*Generamos una permutación que utilizaremos con todos los métodos de búsqueda*/
 
   perm = genera_perm(tamanio);
 
@@ -69,6 +74,8 @@ int main(int argc, char** argv)
     libera_diccionario(pdicc);
     exit(-1);
   }
+
+  /*Hacemos insercion masiva*/
 
   nob = insercion_masiva_diccionario(pdicc, perm, tamanio);
 
@@ -80,9 +87,12 @@ int main(int argc, char** argv)
     exit(-1);
   }
 
+  /*Realizamos busqueda lineal*/
+
   nob = busca_diccionario(pdicc,clave,&pos,blin);
 
   if(nob >= 0) {
+    printf("Búsqueda lineal:\n");
     printf("Clave %d encontrada en la posicion %d en %d op. basicas\n",clave,pos,nob);
   } else if (nob==NO_ENCONTRADO) {
     printf("La clave %d no se encontro en la tabla\n",clave);
@@ -90,8 +100,71 @@ int main(int argc, char** argv)
     printf("Error al buscar la clave %d\n",clave);
   }
 
-  free(perm);
+  /*Realizamos busqueda lineal automatica*/
+
+  nob = busca_diccionario(pdicc, clave, &pos, blin_auto);
+
+  if(nob >= 0) {
+    printf("Búsqueda lineal auto:\n");
+    printf("Clave %d encontrada en la posicion %d en %d op. basicas\n",clave,pos,nob);
+  } else if (nob==NO_ENCONTRADO) {
+    printf("La clave %d no se encontro en la tabla\n",clave);
+  } else {
+    printf("Error al buscar la clave %d\n",clave);
+  }
+
   libera_diccionario(pdicc);
+
+  /*Creamos un diccionario ordenado*/
+
+  pdicc2 = ini_diccionario(tamanio,ORDENADO);
+
+  if (pdicc2 == NULL) {
+    /* error */
+    printf("Error: No se puede Iniciar el diccionario\n");
+    exit(-1);
+  }
+
+  nob = insercion_masiva_diccionario(pdicc2, perm, tamanio);
+
+  if (nob == ERR) {
+    /* error */
+    printf("Error: No se puede crear el diccionario memoria\n");
+    free(perm);
+    libera_diccionario(pdicc2);
+    exit(-1);
+  }
+
+  /*Realizamos busqueda binaria*/
+
+  nob = busca_diccionario(pdicc2,clave,&pos,bbin);
+
+  if(nob >= 0) {
+    printf("Búsqueda binaria:\n");
+    printf("Clave %d encontrada en la posicion %d en %d op. basicas\n",clave,pos,nob);
+  } else if (nob==NO_ENCONTRADO) {
+    printf("La clave %d no se encontro en la tabla\n",clave);
+  } else {
+    printf("Error al buscar la clave %d\n",clave);
+  }
+
+  /*Realizamos búsqueda lineal ordenada*/
+
+  nob = busca_diccionario(pdicc2,clave,&pos,blin);
+
+  if(nob >= 0) {
+    printf("Búsqueda lineal ordenada:\n");
+    printf("Clave %d encontrada en la posicion %d en %d op. basicas\n",clave,pos,nob);
+  } else if (nob==NO_ENCONTRADO) {
+    printf("La clave %d no se encontro en la tabla\n",clave);
+  } else {
+    printf("Error al buscar la clave %d\n",clave);
+  }
+
+  libera_diccionario(pdicc2);
+
+  free(perm);
+
 
   return 0;
 }
