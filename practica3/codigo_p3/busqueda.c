@@ -216,7 +216,7 @@ int blin_auto(int *tabla,int P,int U,int clave,int *ppos){
   tabla[i-1] = buff;
   /*OJO AQUÍ: LE DAMOS EL VALOR DEL INDICE + 1 (EL INDICE 0 SERIA LA POSICION 1)*/
   /*¿HAY QUE DAR EN QUÉ POSICION ESTABA O EN QUE POSICION SE ENCUENTRA EN ESTE MOMENTO?*/
-  *ppos = i+1;
+  *ppos = i;
   counter++;
   return counter;
 }
