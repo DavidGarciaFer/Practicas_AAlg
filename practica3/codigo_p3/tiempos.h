@@ -20,6 +20,7 @@
 #endif
 
 #include "ordenacion.h"
+#include "busqueda.h"
 
 /* definiciones de tipos */
 typedef struct tiempo {
@@ -48,6 +49,4 @@ short tiempo_medio_busqueda(pfunc_busqueda metodo, pfunc_generador_claves genera
                               int n_claves,
                               int n_veces,
                               PTIEMPO ptiempo);
-
-
 #endif

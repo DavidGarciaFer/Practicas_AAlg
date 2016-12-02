@@ -28,10 +28,10 @@
 
 int main(int argc, char** argv)
 {
-  int i, num_min,num_max,incr,n_veces;
+  int i, num_min,num_max,incr,n_veces, n_claves;
   char nombre[256];
   short ret;
- 
+
   srand(time(NULL));
 
   if (argc != 13) {
@@ -62,6 +62,8 @@ int main(int argc, char** argv)
       incr = atoi(argv[++i]);
     } else if (strcmp(argv[i], "-n_veces") == 0) {
       n_veces = atoi(argv[++i]);
+    } else if (strcmp(argv[i], "-n_claves") == 0) {
+      n_claves = atoi(argv[++i]);
     } else if (strcmp(argv[i], "-fichSalida") == 0) {
       strcpy(nombre, argv[++i]);
     } else {
@@ -71,9 +73,9 @@ int main(int argc, char** argv)
   }
 
   /* calculamos los tiempos */
-  ret = genera_tiempos_busqueda(blin, generador_claves_uniforme, NO_ORDENADO, 
+  ret = genera_tiempos_busqueda(blin, generador_claves_uniforme, NO_ORDENADO,
                                 nombre, num_min, num_max, incr, n_veces);
-  if (ret == ERR) { 
+  if (ret == ERR) {
     printf("Error en la funcion genera_tiempos_busqueda\n");
     exit(-1);
   }
@@ -82,4 +84,3 @@ int main(int argc, char** argv)
 
   return 0;
 }
-
