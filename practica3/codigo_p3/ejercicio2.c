@@ -26,23 +26,24 @@
 #include "busqueda.h"
 #include "tiempos.h"
 
+#define NVECES_DET 1
+
 int main(int argc, char** argv)
 {
-  int i, num_min,num_max,incr,n_veces, n_claves;
-  char nombre[256];
+  int i, num_min,num_max,incr,n_veces;
+  char nombre[256], fichero1[256], fichero2[256], fichero3[256], fichero4[256];
   short ret;
 
   srand(time(NULL));
 
-  if (argc != 13) {
+  if (argc != 11) {
     fprintf(stderr, "Error en los parametros de entrada:\n\n");
     fprintf(stderr, "%s -num_min <int> -num_max <int> -incr <int>\n", argv[0]);
-    fprintf(stderr, "\t\t -n_claves <int> -n_veces <int> -fichSalida <string> \n");
+    fprintf(stderr, "\t\t -n_veces <int> -fichSalida <string> \n");
     fprintf(stderr, "Donde:\n");
     fprintf(stderr, "-num_min: numero minimo de elementos de la tabla\n");
     fprintf(stderr, "-num_max: numero minimo de elementos de la tabla\n");
     fprintf(stderr, "-incr: incremento\n");
-    fprintf(stderr, "-n_claves: numero de claves a buscar.\n");
     fprintf(stderr, "-n_veces: numero de veces que se busca cada clave\n");
     fprintf(stderr, "-fichSalida: Nombre del fichero de salida\n");
     exit(-1);
@@ -62,21 +63,56 @@ int main(int argc, char** argv)
       incr = atoi(argv[++i]);
     } else if (strcmp(argv[i], "-n_veces") == 0) {
       n_veces = atoi(argv[++i]);
-    } else if (strcmp(argv[i], "-n_claves") == 0) {
-      n_claves = atoi(argv[++i]);
-    } else if (strcmp(argv[i], "-fichSalida") == 0) {
-      strcpy(nombre, argv[++i]);
-    } else {
+    } else if (strcmp(argv[i], "-fichSalida") == 0) strcpy(nombre, argv[++i]);
+      else {
       fprintf(stderr, "Parametro %s es incorrecto\n", argv[i]);
       exit(-1);
     }
   }
 
+  /*Creamos los nombres de los ficheros*/
+
+  strcpy(fichero1, nombre);
+  strcat(fichero1, "_blin.txt");
+  strcpy(fichero2, nombre);
+  strcat(fichero2, "_bbin.txt");
+  strcpy(fichero3, nombre);
+  strcat(fichero3, "_blin_auto.txt");
+  strcpy(fichero4, nombre);
+  strcat(fichero4, "_bbin_pot.txt");
+
   /* calculamos los tiempos */
   ret = genera_tiempos_busqueda(blin, generador_claves_uniforme, NO_ORDENADO,
-                                nombre, num_min, num_max, incr, n_veces);
+                                fichero1, num_min, num_max, incr, NVECES_DET);
   if (ret == ERR) {
-    printf("Error en la funcion genera_tiempos_busqueda\n");
+    printf("Error en la funcion genera_tiempos_busqueda lineal\n");
+    exit(-1);
+  }
+
+  printf("PASA A BBIN!!!!!\n");
+
+  ret = genera_tiempos_busqueda(bbin, generador_claves_uniforme, ORDENADO,
+                                fichero2, num_min, num_max, incr, NVECES_DET);
+  if (ret == ERR){
+    printf("Error en la funcion genera_tiempos_busqueda binaria\n");
+    exit(-1);
+  }
+
+  printf("PASA A BLIN AUTO\n");
+
+  ret = genera_tiempos_busqueda(blin_auto, generador_claves_potencial, NO_ORDENADO,
+                                fichero3, num_min, num_max, incr, n_veces);
+  if (ret == ERR){
+    printf("Error en la funcion genera_tiempos_busqueda lineal auto\n");
+    exit(-1);
+  }
+
+  printf("PASA A BBIN AUTO\n");
+
+  ret = genera_tiempos_busqueda(bbin, generador_claves_potencial, ORDENADO,
+                                fichero4, num_min, num_max, incr, n_veces);
+  if (ret == ERR){
+    printf("Error en la funcion genera_tiempos_busqueda binaria potencial\n");
     exit(-1);
   }
 

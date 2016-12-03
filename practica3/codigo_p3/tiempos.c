@@ -265,7 +265,6 @@ short genera_tiempos_busqueda(pfunc_busqueda metodo, pfunc_generador_claves gene
       }
       free(tiempo);
       return ERR;
-
     }
 
   }
