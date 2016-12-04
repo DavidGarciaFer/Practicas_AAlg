@@ -112,19 +112,20 @@ int inserta_diccionario(PDICC pdicc, int clave){
   pdicc->tabla[pdicc->n_datos] = clave;
   pdicc->n_datos++;
   if(pdicc->orden == ORDENADO){
-    buff = pdicc->tabla[pdicc->n_datos-2];
-    i = pdicc->n_datos - 3;
+    buff = pdicc->tabla[pdicc->n_datos-1];
+    i = pdicc->n_datos - 2;
     while(i >= 0 && pdicc->tabla[i] > buff){
       pdicc->tabla[i + 1] = pdicc->tabla[i];
       i--;
       counter++;
     }
-    pdicc->tabla[i+1] = buff;
+    if(counter > 0)
+      pdicc->tabla[i+1] = buff;
   }
-  return counter++;
+  return counter;
 }
 
-int insercion_masiva_diccionario (PDICC pdicc, int *claves, int n_claves){
+int insercion_masiva_diccionario(PDICC pdicc, int *claves, int n_claves){
 	int j, counter, cerror;
   if(!pdicc || !claves || n_claves <= 0 || ((pdicc->n_datos + n_claves) > pdicc->tamanio)){
     return ERR;
@@ -138,7 +139,6 @@ int insercion_masiva_diccionario (PDICC pdicc, int *claves, int n_claves){
   }
   return counter;
 }
-
 
 
 int busca_diccionario(PDICC pdicc, int clave, int *ppos, pfunc_busqueda metodo){
@@ -162,32 +162,35 @@ int i;
 /* Funciones de busqueda del TAD Diccionario */
 int bbin(int *tabla,int P,int U,int clave,int *ppos){
 
-  int counter = 0, error;
-  int medio = (P+U)/2;
+  int counter = 0, error, medio;
+  
+  if(!tabla || P > U){
+    return NO_ENCONTRADO;
+  }
 
-  while(P <= U){
-    if(tabla[medio] == clave){
+  medio = (P+U)/2;
+  if(tabla[medio] == clave){
       *ppos = medio + 1;
       return 1;
-    }
-    if(tabla[medio] < clave){
-      P = medio + 1;
-      /*U se queda igual*/
-      counter++;
-    }
-    else{
-      /*P se queda igual*/
-      U = medio;
-      counter++;
-    }
-    error = bbin(tabla, P, U, clave, ppos);
-    if(error == NO_ENCONTRADO){
-      return NO_ENCONTRADO;
-    }
-    counter += error;
-    return counter;
   }
-  return NO_ENCONTRADO;
+  
+  if(tabla[medio] < clave){
+    P = medio + 1;
+    /*U se queda igual*/
+    counter++;
+  }
+  else{
+    /*P se queda igual*/
+    U = medio - 1;
+    counter++;
+  }
+  
+  error = bbin(tabla, P, U, clave, ppos);
+  if(error == NO_ENCONTRADO){
+    return NO_ENCONTRADO;
+  }
+  counter += error;
+  return counter;
 }
 
 int blin(int *tabla,int P,int U,int clave,int *ppos){
@@ -195,7 +198,7 @@ int blin(int *tabla,int P,int U,int clave,int *ppos){
   if(!tabla || P < 0 || U < P || clave <= 0){
     return ERR;
   }
-  for(i = P, counter = 0; i <= U && tabla[i] != clave; i ++, counter++);
+  for(i = P, counter = 0; i <= U && tabla[i] != clave; i++, counter++);
   if(i > U){
     return NO_ENCONTRADO;
   }
