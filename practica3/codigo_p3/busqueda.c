@@ -211,9 +211,14 @@ int blin_auto(int *tabla,int P,int U,int clave,int *ppos){
   int i, counter, buff;
   if(!tabla || P < 0 || U < P || clave <= 0)
     return ERR;
-  for(i = P, counter = 0; i <= U && tabla[i] != clave; i ++, counter++);
+  for(i = P, counter = 0; i <= U && tabla[i] != clave; i++, counter++);
   if(i > U)
     return NO_ENCONTRADO;
+  if(i == P){
+    *ppos = 1;
+    return 1;
+  }
+  
   buff = tabla[i];
   tabla[i] = tabla[i-1];
   tabla[i-1] = buff;
