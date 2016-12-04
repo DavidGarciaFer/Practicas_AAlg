@@ -294,7 +294,7 @@ short tiempo_medio_busqueda(pfunc_busqueda metodo, pfunc_generador_claves genera
                               PTIEMPO ptiempo){
   int *ob, *claves, *permutacion, error, min = INT_MAX, max = 0, ppos, ret = 0, ret2, i;
   PDICC dicc;
-  double t_medio = 0;
+  double t_medio = 0, obmedio = 0;
   clock_t t_ini, t_fin;
 
   if(!metodo || !generador || (orden != ORDENADO && orden != NO_ORDENADO) || tamanio <= 0 || n_claves <= 0 || n_veces <= 0 || !ptiempo)
@@ -346,7 +346,7 @@ short tiempo_medio_busqueda(pfunc_busqueda metodo, pfunc_generador_claves genera
       t_medio += (double)(t_fin - t_ini)/CLOCKS_PER_SEC;
   }
 
-  ret = ret/(n_veces*n_claves);
+  obmedio =(double) ret/(n_veces*n_claves);
   t_medio = t_medio/(n_veces*n_claves);
 
   /*Actualizamos la estructura de tiempo*/
@@ -355,13 +355,14 @@ short tiempo_medio_busqueda(pfunc_busqueda metodo, pfunc_generador_claves genera
   ptiempo->n_perms = n_claves;
   ptiempo->n_veces = n_veces;
   ptiempo->tiempo = t_medio;
-  ptiempo->medio_ob = ret;
+  ptiempo->medio_ob = obmedio;
   ptiempo->min_ob = min;
   ptiempo->max_ob = max;
 
   free(ob);
   libera_diccionario(dicc);
   free(permutacion);
+  free(claves);
 
   return OK;
 

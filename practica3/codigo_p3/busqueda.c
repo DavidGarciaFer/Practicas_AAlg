@@ -163,7 +163,7 @@ int i;
 int bbin(int *tabla,int P,int U,int clave,int *ppos){
 
   int counter = 0, error, medio;
-  
+
   if(!tabla || P > U){
     return NO_ENCONTRADO;
   }
@@ -173,7 +173,7 @@ int bbin(int *tabla,int P,int U,int clave,int *ppos){
       *ppos = medio + 1;
       return 1;
   }
-  
+
   if(tabla[medio] < clave){
     P = medio + 1;
     /*U se queda igual*/
@@ -184,7 +184,7 @@ int bbin(int *tabla,int P,int U,int clave,int *ppos){
     U = medio - 1;
     counter++;
   }
-  
+
   error = bbin(tabla, P, U, clave, ppos);
   if(error == NO_ENCONTRADO){
     return NO_ENCONTRADO;
@@ -218,7 +218,6 @@ int blin_auto(int *tabla,int P,int U,int clave,int *ppos){
     *ppos = 1;
     return 1;
   }
-  
   buff = tabla[i];
   tabla[i] = tabla[i-1];
   tabla[i-1] = buff;

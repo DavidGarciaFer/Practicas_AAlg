@@ -85,37 +85,34 @@ int main(int argc, char** argv)
   ret = genera_tiempos_busqueda(blin, generador_claves_uniforme, NO_ORDENADO,
                                 fichero1, num_min, num_max, incr, NVECES_DET);
   if (ret == ERR) {
-    printf("Error en la funcion genera_tiempos_busqueda lineal\n");
     exit(-1);
   }
 
-  printf("PASA A BBIN!!!!!\n");
+  printf("Fichero %s creado correctamente.\n", fichero1);
 
   ret = genera_tiempos_busqueda(bbin, generador_claves_uniforme, ORDENADO,
                                 fichero2, num_min, num_max, incr, NVECES_DET);
   if (ret == ERR){
-    printf("Error en la funcion genera_tiempos_busqueda binaria\n");
     exit(-1);
   }
 
-  printf("PASA A BLIN AUTO\n");
+  printf("Fichero %s creado correctamente.\n", fichero2);
 
   ret = genera_tiempos_busqueda(blin_auto, generador_claves_potencial, NO_ORDENADO,
                                 fichero3, num_min, num_max, incr, n_veces);
   if (ret == ERR){
-    printf("Error en la funcion genera_tiempos_busqueda lineal auto\n");
     exit(-1);
   }
 
-  printf("PASA A BBIN AUTO\n");
+  printf("Fichero %s creado correctamente.\n", fichero3);
 
   ret = genera_tiempos_busqueda(bbin, generador_claves_potencial, ORDENADO,
                                 fichero4, num_min, num_max, incr, n_veces);
   if (ret == ERR){
-    printf("Error en la funcion genera_tiempos_busqueda binaria potencial\n");
     exit(-1);
   }
 
+  printf("Fichero %s creado correctamente.\n", fichero4);
   printf("Salida correcta \n");
 
   return 0;
