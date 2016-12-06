@@ -64,6 +64,9 @@ int main(int argc, char** argv)
     exit(-1);
   }
 
+  printf("Estado original del diccionario no ordenado:\n");
+  imprime_diccionario(pdicc);
+
   /*Generamos una permutación que utilizaremos con todos los métodos de búsqueda*/
 
   perm = genera_perm(tamanio);
@@ -86,6 +89,9 @@ int main(int argc, char** argv)
     libera_diccionario(pdicc);
     exit(-1);
   }
+
+  printf("Estado del diccionario no ordenado tras la inserción:\n");
+  imprime_diccionario(pdicc);
 
   /*Realizamos busqueda lineal*/
 
@@ -113,6 +119,9 @@ int main(int argc, char** argv)
     printf("Error al buscar la clave %d\n",clave);
   }
 
+  printf("Estado del diccionario no ordenado tras ejecutar blin_auto:\n");
+  imprime_diccionario(pdicc);
+
   libera_diccionario(pdicc);
 
   /*Creamos un diccionario ordenado*/
@@ -124,6 +133,8 @@ int main(int argc, char** argv)
     printf("Error: No se puede Iniciar el diccionario\n");
     exit(-1);
   }
+  printf("Estado inicial del diccionario ordenado:\n");
+  imprime_diccionario(pdicc2);
 
   nob = insercion_masiva_diccionario(pdicc2, perm, tamanio);
 
@@ -134,6 +145,9 @@ int main(int argc, char** argv)
     libera_diccionario(pdicc2);
     exit(-1);
   }
+
+  printf("Estado del diccionario ordenado tras la inserción: \n");
+  imprime_diccionario(pdicc2);
 
   /*Realizamos busqueda binaria*/
 

@@ -88,21 +88,6 @@ void libera_diccionario(PDICC pdicc){
   free(pdicc);
 }
 
-/*int inserta_diccionario(PDICC pdicc, int clave){
-  int j, counter;
-  if(!pdicc || clave < 0 || pdicc->n_datos >= pdicc->tamanio)
-    return ERR;
-  pdicc->tabla[pdicc->n_datos] = clave;
-  pdicc->n_datos++;
-  if (pdicc->orden == ORDENADO){
-    for(j = pdicc->n_datos - 2 , counter = 0; j >= 0 && pdicc->tabla[j] > pdicc->tabla[pdicc->n_datos-1]; j--, counter++)
-      pdicc->tabla[j+1] = pdicc->tabla[j];
-  }
-  if(j >= 0)
-    counter++;
-  pdicc->tabla[j+1] = pdicc->tabla[pdicc->n_datos-1];
-  return counter;
-}*/
 int inserta_diccionario(PDICC pdicc, int clave){
   int i, buff, counter = 0;
   if(!pdicc || clave <= 0)
@@ -152,7 +137,7 @@ int busca_diccionario(PDICC pdicc, int clave, int *ppos, pfunc_busqueda metodo){
 void imprime_diccionario(PDICC pdicc){
 int i;
   if(!pdicc) return;
-  printf("%d:%d:%c[ ", pdicc->tamanio, pdicc->n_datos, pdicc->orden);
+  printf("%d:%d:%d[ ", pdicc->tamanio, pdicc->n_datos, pdicc->orden);
   for (i = 0; i < pdicc->n_datos; i++) {
     printf("%d ", pdicc->tabla[i]);
   }
@@ -221,8 +206,6 @@ int blin_auto(int *tabla,int P,int U,int clave,int *ppos){
   buff = tabla[i];
   tabla[i] = tabla[i-1];
   tabla[i-1] = buff;
-  /*OJO AQUÍ: LE DAMOS EL VALOR DEL INDICE + 1 (EL INDICE 0 SERIA LA POSICION 1)*/
-  /*¿HAY QUE DAR EN QUÉ POSICION ESTABA O EN QUE POSICION SE ENCUENTRA EN ESTE MOMENTO?*/
   *ppos = i;
   counter++;
   return counter;
