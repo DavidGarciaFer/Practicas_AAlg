@@ -235,6 +235,33 @@ short guarda_tabla_tiempos(char* fichero, PTIEMPO* tiempo, int N){
 	return OK;
 }
 
+
+/***************************************************/
+/* Funcion: genera_tiempos_busqueda      Fecha:    */
+/* Autores: David García y Antonio Martín          */
+/*                                                 */
+/* Rutina que llama al resto con diferentes        */
+/* tamaños de los diccionarios                     */
+/*                                                 */
+/* Entrada:                                        */
+/*  pfunc_busqueda metodo: rutina de la que se     */
+/*medirá el tiempo.                                */
+/*  pfunc_generador_claves generador: rutina que   */
+/*generará las claves a buscar                     */
+/*  int orden: diccionario ORDENADO o NO_ORDENADO  */
+/* char* fichero: fichero donde se escribirán los  */
+/* datos                                           */
+/*  int num_min: tamaño mínimo de los diccionarios */
+/*  int num_max: tamaño máximo de los diccionarios */
+/*  int incr: incremento del tamaño de los         */
+/* diccionarios                                    */
+/* int n_veces: número de veces que se buscará     */
+/* cada clave                                      */
+/*                                                 */
+/* Salida:                                         */
+/*  OK si todo fue bien                            */
+/*  ERR en caso de error                           */
+/***************************************************/
 short genera_tiempos_busqueda(pfunc_busqueda metodo, pfunc_generador_claves generador,
                                 int orden, char* fichero,
                                 int num_min, int num_max,
@@ -286,6 +313,33 @@ short genera_tiempos_busqueda(pfunc_busqueda metodo, pfunc_generador_claves gene
 
 }
 
+
+
+/***************************************************/
+/* Funcion: tiempo_medio_busqueda      Fecha:      */
+/* Autores: David García y Antonio Martín          */
+/*                                                 */
+/* Rutina que almacena en un estructura de tipo    */
+/* tiempo el tamaño de los diccionarios, el        */
+/* el tiempo medio de ejecución, número medio,     */
+/*  mínimo y máximo de OB ejecutadas.              */
+/*                                                 */
+/* Entrada:                                        */
+/*  pfunc_busqueda metodo: rutina de la que se     */
+/*medirá el tiempo.                                */
+/*  int n_claves: número de claves a buscar        */
+/*  pfunc_geenrador_claves generador: rutina que   */
+/*generará las claves.                             */
+/*  int orden: diccionario ORDENADO o NO_ORDENADO  */
+/*  int tamanio: tamaño del diccionario            */
+/*  int n_veces: número de veces que se buscará    */
+/* cada clave                                      */
+/* PTIEMPO ptiempo: puntero a la estructura tiempo */
+/*                                                 */
+/* Salida:                                         */
+/*  OK si todo fue bien.                           */
+/*  ERR en caso de error                           */
+/***************************************************/
 short tiempo_medio_busqueda(pfunc_busqueda metodo, pfunc_generador_claves generador,
                               int orden,
                               int tamanio,
