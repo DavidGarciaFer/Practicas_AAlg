@@ -6,7 +6,8 @@
  * Autor: Carlos Aguirre
  * Version: 1.0
  * Fecha: 11-11-2016
- *
+ * Autores: David García Fernández y Antonio Martín Masuda
+ * Grupo: 1201
  */
 
 #include "busqueda.h"
@@ -57,6 +58,11 @@ void generador_claves_potencial(int *claves, int n_claves, int max)
   return;
 }
 
+/**
+ *  Funcion: ini_diccionario
+ *               Esta funcion crea memoria para un diccionario de tamanio dado como
+ *               parámetro y orden también dado.
+ */
 PDICC ini_diccionario (int tamanio, char orden){
 
   DICC* diccionario;
@@ -81,6 +87,10 @@ PDICC ini_diccionario (int tamanio, char orden){
 
 }
 
+/**
+ *  Funcion: ini_diccionario
+ *               Esta funcion libera la memoria reservada para un diccionario dado.
+ */
 void libera_diccionario(PDICC pdicc){
   if(!pdicc) return;
   if(pdicc->tabla)
@@ -88,6 +98,13 @@ void libera_diccionario(PDICC pdicc){
   free(pdicc);
 }
 
+/**
+ *  Funcion: inserta_diccionario
+ *               Esta funcion inserta una clave dada a un diccionario dado.
+ *               Si no hay espacio devuelve ERR. Si orden vale ORDENADO lo
+ *               inserta al final y luego lo coloca en su sitio y devuelve 
+ *               el número de operaciones básicas realizadas.
+ */
 int inserta_diccionario(PDICC pdicc, int clave){
   int i, buff, counter = 0;
   if(!pdicc || clave <= 0)
@@ -110,6 +127,12 @@ int inserta_diccionario(PDICC pdicc, int clave){
   return counter;
 }
 
+/**
+ *  Funcion: insercion_masiva_diccionario
+ *               Esta funcion inserta una tabla de claves dada en un diccionario dado.
+ *               Si no hay espacio o alguna clave no se ha insertado devuelve ERR. 
+ *               Inserta la tabla de uno llamando en bucle a la función anterior.
+ */
 int insercion_masiva_diccionario(PDICC pdicc, int *claves, int n_claves){
 	int j, counter, cerror;
   if(!pdicc || !claves || n_claves <= 0 || ((pdicc->n_datos + n_claves) > pdicc->tamanio)){
@@ -125,7 +148,12 @@ int insercion_masiva_diccionario(PDICC pdicc, int *claves, int n_claves){
   return counter;
 }
 
-
+/**
+ *  Funcion: busca_diccionario
+ *               Esta funcion busca una clave dada en un diccionario dado.
+ *               Si no lo encuentra devuelve ERR. Almacena en ppos la posición
+ *               del elemento y el número de operaciones básicas realizadas.
+ */
 int busca_diccionario(PDICC pdicc, int clave, int *ppos, pfunc_busqueda metodo){
   int counter;
   if(!pdicc || clave <= 0 || !metodo)
@@ -134,6 +162,10 @@ int busca_diccionario(PDICC pdicc, int clave, int *ppos, pfunc_busqueda metodo){
   return counter;
 }
 
+/**
+ *  Funcion: imprime_diccionario
+ *               Esta funcion imprime todos los campos del diccionario dado.
+ */
 void imprime_diccionario(PDICC pdicc){
 int i;
   if(!pdicc) return;
@@ -145,6 +177,7 @@ int i;
 }
 
 /* Funciones de busqueda del TAD Diccionario */
+/* Búsqueda binaria*/
 int bbin(int *tabla,int P,int U,int clave,int *ppos){
 
   int counter = 0, error, medio;
@@ -178,6 +211,7 @@ int bbin(int *tabla,int P,int U,int clave,int *ppos){
   return counter;
 }
 
+/* Búsqueda lineal*/
 int blin(int *tabla,int P,int U,int clave,int *ppos){
   int i, counter = 0;
   if(!tabla || P < 0 || U < P || clave <= 0){
@@ -192,6 +226,7 @@ int blin(int *tabla,int P,int U,int clave,int *ppos){
   return counter;
 }
 
+/*Búsqueda ineal auto*/
 int blin_auto(int *tabla,int P,int U,int clave,int *ppos){
   int i, counter, buff;
   if(!tabla || P < 0 || U < P || clave <= 0)
